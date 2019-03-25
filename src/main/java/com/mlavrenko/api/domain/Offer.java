@@ -11,6 +11,7 @@ public class Offer {
     @Column(nullable = false, unique = true)
     private String jobTitle;
     @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
     @Column(nullable = false)
     private Integer numberOfApplications;

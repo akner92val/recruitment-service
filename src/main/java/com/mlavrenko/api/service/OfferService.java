@@ -3,7 +3,7 @@ package com.mlavrenko.api.service;
 import com.mlavrenko.api.domain.Offer;
 import com.mlavrenko.api.dto.OfferDTO;
 import com.mlavrenko.api.repository.OfferRepository;
-import org.springframework.beans.BeanUtils;
+import com.mlavrenko.api.utils.DTOConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,31 +19,17 @@ public class OfferService {
     }
 
     public OfferDTO createOffer(OfferDTO offerDTO) {
-        Offer offer = convertToDomain(offerDTO);
-        return convertToDTO(offerRepository.save(offer));
-    }
-
-    private OfferDTO convertToDTO(Offer offer) {
-        if (offer == null) {
-            return null;
-        } else {
-            OfferDTO offerDTO = new OfferDTO();
-            BeanUtils.copyProperties(offer, offerDTO);
-            return offerDTO;
-        }
-    }
-
-    private Offer convertToDomain(OfferDTO offerDTO) {
-        Offer offer = new Offer();
-        BeanUtils.copyProperties(offerDTO, offer);
-        return offer;
+        Offer offer = DTOConverter.convertToDomain(offerDTO, Offer.class);
+        return DTOConverter.convertToDTO(offerRepository.save(offer), OfferDTO.class);
     }
 
     public OfferDTO getById(Long id) {
-        return convertToDTO(offerRepository.getOne(id));
+        return DTOConverter.convertToDTO(offerRepository.getOne(id), OfferDTO.class);
     }
 
     public List<OfferDTO> getAll() {
-        return offerRepository.findAll().stream().map(this::convertToDTO).collect(toList());
+        return offerRepository.findAll().stream()
+                .map(offer -> DTOConverter.convertToDTO(offer, OfferDTO.class))
+                .collect(toList());
     }
 }
