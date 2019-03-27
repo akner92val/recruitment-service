@@ -47,4 +47,9 @@ public class Offer {
     public void setNumberOfApplications(Integer numberOfApplications) {
         this.numberOfApplications = numberOfApplications;
     }
+
+    @Transient
+    public void incrementNumberOfApplications() {
+        numberOfApplications++;
+    }
 }

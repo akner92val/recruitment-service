@@ -42,8 +42,14 @@ public class ApplicationController {
     }
 
     @GetMapping("/applications/{offerId}}")
-    public ResponseEntity<List<ApplicationDTO>> getAll(Long offerId) {
+    public ResponseEntity<List<ApplicationDTO>> getAllByOfferId(Long offerId) {
         List<ApplicationDTO> applications = applicationService.getAllByOfferId(offerId);
         return ResponseEntity.ok().body(applications);
+    }
+
+    @GetMapping("/applications/count}")
+    public ResponseEntity<Long> getApplicationsCount() {
+        long count = applicationService.getApplicationsCount();
+        return ResponseEntity.ok().body(count);
     }
 }

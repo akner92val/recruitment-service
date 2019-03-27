@@ -16,7 +16,7 @@ public class Application {
     private String resume;
     @Column(nullable = false)
     @Enumerated
-    private ApplicationStatus applicationStatus;
+    private ApplicationStatus applicationStatus = ApplicationStatus.APPLIED;
     @ManyToOne(optional = false)
     @JoinColumn(name = "offer_id", columnDefinition = "integer", referencedColumnName = "id")
     private Offer offer;

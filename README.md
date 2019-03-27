@@ -1,4 +1,4 @@
-# recruitment-service
+    # recruitment-service
 ## Task
 
 Build a backend service that handles a (very simple) recruiting process. The process requires two types of objects: job offers and applications from candidates.
