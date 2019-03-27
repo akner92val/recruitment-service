@@ -14,7 +14,7 @@ public class Offer {
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
     @Column(nullable = false)
-    private Integer numberOfApplications;
+    private int numberOfApplications;
 
     public Long getId() {
         return id;
@@ -40,11 +40,11 @@ public class Offer {
         this.startDate = startDate;
     }
 
-    public Integer getNumberOfApplications() {
+    public int getNumberOfApplications() {
         return numberOfApplications;
     }
 
-    public void setNumberOfApplications(Integer numberOfApplications) {
+    public void setNumberOfApplications(int numberOfApplications) {
         this.numberOfApplications = numberOfApplications;
     }
 

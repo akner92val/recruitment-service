@@ -8,7 +8,7 @@ public class OfferDTO extends RepresentationModel<OfferDTO> {
     private Long id;
     private String jobTitle;
     private Date startDate;
-    private Integer numberOfApplications;
+    private int numberOfApplications;
 
     public Long getId() {
         return id;
@@ -34,11 +34,11 @@ public class OfferDTO extends RepresentationModel<OfferDTO> {
         this.startDate = startDate;
     }
 
-    public Integer getNumberOfApplications() {
+    public int getNumberOfApplications() {
         return numberOfApplications;
     }
 
-    public void setNumberOfApplications(Integer numberOfApplications) {
+    public void setNumberOfApplications(int numberOfApplications) {
         this.numberOfApplications = numberOfApplications;
     }
 }

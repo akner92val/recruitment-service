@@ -17,7 +17,7 @@ public class Application {
     @Column(nullable = false)
     @Enumerated
     private ApplicationStatus applicationStatus = ApplicationStatus.APPLIED;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "offer_id", columnDefinition = "integer", referencedColumnName = "id")
     private Offer offer;
 

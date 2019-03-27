@@ -26,10 +26,9 @@ public class ApplicationService {
 
     public ApplicationDTO createApplication(ApplicationDTO applicationDTO) {
         Application application = DTOConverter.convertToDomain(applicationDTO, Application.class);
-        application.getOffer().incrementNumberOfApplications();
         Application saved = applicationRepository.save(application);
 
-        notificationService.notifyStatusHasChanged(saved.getApplicationStatus(), saved.getId());
+        notificationService.notifyStatusHasChanged(applicationDTO.getApplicationStatus(), saved.getId());
 
         return DTOConverter.convertToDTO(saved, ApplicationDTO.class);
     }
