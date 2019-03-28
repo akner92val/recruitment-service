@@ -15,11 +15,12 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static com.mlavrenko.api.utils.RestResponses.getOptionalEntityResponse;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping(value = "recruitment-service/", produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/recruitment-service", produces = MediaTypes.HAL_JSON_VALUE)
 public class OfferController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -30,7 +31,7 @@ public class OfferController {
     }
 
     @PostMapping(value = "/offer", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OfferDTO> create(@Valid OfferDTO offerDTO) {
+    public ResponseEntity<OfferDTO> create(@Valid @RequestBody OfferDTO offerDTO) {
         OfferDTO created = offerService.createOffer(offerDTO);
 
         created.add(linkTo(methodOn(OfferController.class).create(offerDTO)).withSelfRel());
@@ -40,12 +41,12 @@ public class OfferController {
     }
 
     @GetMapping("/offer/{id}")
-    public ResponseEntity<OfferDTO> getById(@Valid @RequestBody Long id) {
+    public ResponseEntity<OfferDTO> getById(@PathVariable("id") long id) {
         OfferDTO offerDTO = offerService.getById(id);
-        return ResponseEntity.ok().body(offerDTO);
+        return getOptionalEntityResponse(offerDTO);
     }
 
-    @GetMapping("/offers}")
+    @GetMapping("/offers")
     public ResponseEntity<List<OfferDTO>> getAll() {
         List<OfferDTO> offers = offerService.getAll();
         return ResponseEntity.ok().body(offers);

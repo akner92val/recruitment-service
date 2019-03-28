@@ -23,8 +23,10 @@ public class OfferService {
         return DTOConverter.convertToDTO(offerRepository.save(offer), OfferDTO.class);
     }
 
-    public OfferDTO getById(Long id) {
-        return DTOConverter.convertToDTO(offerRepository.getOne(id), OfferDTO.class);
+    public OfferDTO getById(long id) {
+        return offerRepository.findById(id)
+                .map(offer -> DTOConverter.convertToDTO(offer, OfferDTO.class))
+                .orElse(null);
     }
 
     public List<OfferDTO> getAll() {
