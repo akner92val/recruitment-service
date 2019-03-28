@@ -29,6 +29,10 @@ public class OfferService {
                 .orElse(null);
     }
 
+    public Offer getOfferById(long id){
+        return offerRepository.getOne(id);
+    }
+
     public List<OfferDTO> getAll() {
         return offerRepository.findAll().stream()
                 .map(offer -> DTOConverter.convertToDTO(offer, OfferDTO.class))

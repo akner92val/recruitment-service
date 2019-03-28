@@ -1,15 +1,13 @@
 package com.mlavrenko.api.dto;
 
-import com.mlavrenko.api.domain.Offer;
 import com.mlavrenko.api.domain.enums.ApplicationStatus;
-import org.springframework.hateoas.RepresentationModel;
 
-public class ApplicationDTO extends RepresentationModel<ApplicationDTO> {
+public class ApplicationDTO {
     private Long id;
     private String candidateEmail;
     private String resume;
     private ApplicationStatus applicationStatus;
-    private Offer offer;
+    private OfferDTO offer;
 
     public Long getId() {
         return id;
@@ -43,11 +41,11 @@ public class ApplicationDTO extends RepresentationModel<ApplicationDTO> {
         this.applicationStatus = applicationStatus;
     }
 
-    public Offer getOffer() {
+    public OfferDTO getOffer() {
         return offer;
     }
 
-    public void setOffer(Offer offer) {
+    public void setOffer(OfferDTO offer) {
         this.offer = offer;
     }
 }

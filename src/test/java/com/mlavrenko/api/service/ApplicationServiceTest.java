@@ -5,6 +5,7 @@ import com.mlavrenko.api.domain.Application;
 import com.mlavrenko.api.domain.Offer;
 import com.mlavrenko.api.domain.enums.ApplicationStatus;
 import com.mlavrenko.api.dto.ApplicationDTO;
+import com.mlavrenko.api.dto.OfferDTO;
 import com.mlavrenko.api.repository.ApplicationRepository;
 import com.mlavrenko.api.utils.DTOConverter;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,10 +29,12 @@ class ApplicationServiceTest {
     private NotificationService notificationService;
     @Mock
     private ApplicationRepository applicationRepository;
+    @Mock
+    private OfferService offerService;
 
     @BeforeEach
     void setUp() {
-        applicationService = new ApplicationService(applicationRepository, notificationService);
+        applicationService = new ApplicationService(applicationRepository, notificationService, offerService);
     }
 
     @Test
@@ -53,7 +56,7 @@ class ApplicationServiceTest {
         dto.setId(1L);
         dto.setCandidateEmail("email");
         dto.setResume("resume");
-        dto.setOffer(new Offer());
+        dto.setOffer(new OfferDTO());
         return dto;
     }
 

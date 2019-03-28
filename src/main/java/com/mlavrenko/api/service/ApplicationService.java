@@ -1,8 +1,10 @@
 package com.mlavrenko.api.service;
 
 import com.mlavrenko.api.domain.Application;
+import com.mlavrenko.api.domain.Offer;
 import com.mlavrenko.api.domain.enums.ApplicationStatus;
 import com.mlavrenko.api.dto.ApplicationDTO;
+import com.mlavrenko.api.dto.OfferDTO;
 import com.mlavrenko.api.repository.ApplicationRepository;
 import com.mlavrenko.api.utils.DTOConverter;
 import org.springframework.beans.BeanUtils;
@@ -17,20 +19,35 @@ import java.util.stream.Collectors;
 public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final NotificationService notificationService;
+    private final OfferService offerService;
 
 
-    public ApplicationService(ApplicationRepository applicationRepository, NotificationService notificationService) {
+    public ApplicationService(ApplicationRepository applicationRepository, NotificationService notificationService, OfferService offerService) {
         this.applicationRepository = applicationRepository;
         this.notificationService = notificationService;
+        this.offerService = offerService;
     }
 
     public ApplicationDTO createApplication(ApplicationDTO applicationDTO) {
-        Application application = DTOConverter.convertToDomain(applicationDTO, Application.class);
+        Application application = convertToDomain(applicationDTO);
         Application saved = applicationRepository.save(application);
 
         notificationService.notifyStatusHasChanged(applicationDTO.getApplicationStatus(), saved.getId());
 
-        return DTOConverter.convertToDTO(saved, ApplicationDTO.class);
+        return convertToDTO(saved);
+    }
+
+    private Application convertToDomain(ApplicationDTO applicationDTO) {
+        Application application = DTOConverter.convertToDomain(applicationDTO, Application.class);
+        Offer offer = offerService.getOfferById(applicationDTO.getOffer().getId());
+        application.setOffer(offer);
+        return application;
+    }
+
+    private ApplicationDTO convertToDTO(Application application) {
+        ApplicationDTO dto = DTOConverter.convertToDTO(application, ApplicationDTO.class);
+        dto.setOffer(DTOConverter.convertToDTO(application.getOffer(), OfferDTO.class));
+        return dto;
     }
 
     public ApplicationDTO updateApplication(ApplicationDTO applicationDTO) {
@@ -48,16 +65,16 @@ public class ApplicationService {
             notificationService.notifyStatusHasChanged(newStatus, updated.getId());
         }
 
-        return DTOConverter.convertToDTO(updated, ApplicationDTO.class);
+        return convertToDTO(updated);
     }
 
     public ApplicationDTO getById(Long id) {
-        return DTOConverter.convertToDTO(applicationRepository.getOne(id), ApplicationDTO.class);
+        return convertToDTO(applicationRepository.getOne(id));
     }
 
     public List<ApplicationDTO> getAllByOfferId(Long offerId) {
         return applicationRepository.findAllByOfferId(offerId).stream()
-                .map(application -> DTOConverter.convertToDTO(application, ApplicationDTO.class))
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 

@@ -2,28 +2,24 @@ package com.mlavrenko.api.controller;
 
 import com.mlavrenko.api.dto.OfferDTO;
 import com.mlavrenko.api.service.OfferService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 import static com.mlavrenko.api.utils.RestResponses.getOptionalEntityResponse;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping(value = "/recruitment-service", produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/recruitment-service", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OfferController {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private final OfferService offerService;
 
     public OfferController(OfferService offerService) {
@@ -34,10 +30,7 @@ public class OfferController {
     public ResponseEntity<OfferDTO> create(@Valid @RequestBody OfferDTO offerDTO) {
         OfferDTO created = offerService.createOffer(offerDTO);
 
-        created.add(linkTo(methodOn(OfferController.class).create(offerDTO)).withSelfRel());
-        URI uri = UriComponentsBuilder.fromHttpUrl(created.getRequiredLink(IanaLinkRelations.SELF).getHref()).build().toUri();
-
-        return ResponseEntity.created(uri).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping("/offer/{id}")

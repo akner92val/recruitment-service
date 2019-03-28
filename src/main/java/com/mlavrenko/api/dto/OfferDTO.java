@@ -1,10 +1,8 @@
 package com.mlavrenko.api.dto;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import java.util.Date;
 
-public class OfferDTO extends RepresentationModel<OfferDTO> {
+public class OfferDTO {
     private Long id;
     private String jobTitle;
     private Date startDate;
