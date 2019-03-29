@@ -9,16 +9,16 @@ import javax.transaction.Transactional;
 
 @Service
 @Transactional
-public class NotificationService {
+class NotificationService {
     private final ApplicationEventPublisher eventPublisher;
     private final EventFactory eventFactory;
 
-    public NotificationService(ApplicationEventPublisher eventPublisher, EventFactory eventFactory) {
+    NotificationService(ApplicationEventPublisher eventPublisher, EventFactory eventFactory) {
         this.eventPublisher = eventPublisher;
         this.eventFactory = eventFactory;
     }
 
-    public void notifyStatusHasChanged(ApplicationStatus newStatus, Long applicationId) {
+    void notifyStatusHasChanged(ApplicationStatus newStatus, Long applicationId) {
         eventPublisher.publishEvent(eventFactory.createStatusChangedEvent(newStatus, applicationId));
     }
 }

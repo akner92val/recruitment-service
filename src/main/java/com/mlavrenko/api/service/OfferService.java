@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class OfferService {
     private final OfferRepository offerRepository;
 
-    public OfferService(OfferRepository offerRepository) {
+    OfferService(OfferRepository offerRepository) {
         this.offerRepository = offerRepository;
     }
 
@@ -33,7 +33,7 @@ public class OfferService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public Optional<Offer> findById(long id) {
+    Optional<Offer> findById(long id) {
         return offerRepository.findById(id);
     }
 
