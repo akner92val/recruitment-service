@@ -10,8 +10,11 @@ import com.mlavrenko.api.utils.DTOConverter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.nio.channels.IllegalSelectorException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +33,7 @@ public class ApplicationService {
 
     public ApplicationDTO createApplication(ApplicationDTO applicationDTO) {
         Application application = convertToDomain(applicationDTO);
+        application.getOffer().incrementNumberOfApplications();
         Application saved = applicationRepository.save(application);
 
         notificationService.notifyStatusHasChanged(applicationDTO.getApplicationStatus(), saved.getId());
@@ -39,9 +43,16 @@ public class ApplicationService {
 
     private Application convertToDomain(ApplicationDTO applicationDTO) {
         Application application = DTOConverter.convertToDomain(applicationDTO, Application.class);
-        Offer offer = offerService.getOfferById(applicationDTO.getOffer().getId());
+        long offerId = getOfferId(applicationDTO);
+        Offer offer = offerService.findById(offerId).orElseThrow(IllegalArgumentException::new);
         application.setOffer(offer);
         return application;
+    }
+
+    private Long getOfferId(ApplicationDTO applicationDTO) {
+        return Optional.ofNullable(applicationDTO.getOffer())
+                .map(OfferDTO::getId)
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     private ApplicationDTO convertToDTO(Application application) {
@@ -51,13 +62,10 @@ public class ApplicationService {
     }
 
     public ApplicationDTO updateApplication(ApplicationDTO applicationDTO) {
-        Application application = applicationRepository.getOne(applicationDTO.getId());
-        if (application == null) {
-            return null;
-        }
+        Application application = findById(applicationDTO.getId());
         ApplicationStatus oldStatus = application.getApplicationStatus();
 
-        BeanUtils.copyProperties(applicationDTO, application);
+        copyFromDto(applicationDTO, application);
         Application updated = applicationRepository.save(application);
 
         ApplicationStatus newStatus = updated.getApplicationStatus();
@@ -68,8 +76,32 @@ public class ApplicationService {
         return convertToDTO(updated);
     }
 
+    private void copyFromDto(ApplicationDTO applicationDTO, Application application) {
+        BeanUtils.copyProperties(applicationDTO, application, "offer");
+        updateOffer(application, applicationDTO.getOffer());
+    }
+
+    private void updateOffer(Application application, OfferDTO offer) {
+        if (shouldUpdate(application, offer)) {
+            Offer newOffer = offerService.findById(offer.getId()).orElseThrow(IllegalArgumentException::new);
+            application.setOffer(newOffer);
+        }
+    }
+
+    private boolean shouldUpdate(Application application, OfferDTO offer) {
+        return Optional.ofNullable(offer)
+                .map(OfferDTO::getId)
+                .map(id -> !id.equals(application.getOffer().getId()))
+                .orElse(false);
+    }
+
     public ApplicationDTO getById(Long id) {
-        return convertToDTO(applicationRepository.getOne(id));
+        Application application = findById(id);
+        return convertToDTO(application);
+    }
+
+    private Application findById(Long id) {
+        return applicationRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public List<ApplicationDTO> getAllByOfferId(Long offerId) {

@@ -6,11 +6,15 @@ import com.mlavrenko.api.repository.OfferRepository;
 import com.mlavrenko.api.utils.DTOConverter;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
+@Transactional
 public class OfferService {
     private final OfferRepository offerRepository;
 
@@ -24,13 +28,13 @@ public class OfferService {
     }
 
     public OfferDTO getById(long id) {
-        return offerRepository.findById(id)
+        return findById(id)
                 .map(offer -> DTOConverter.convertToDTO(offer, OfferDTO.class))
-                .orElse(null);
+                .orElseThrow(EntityNotFoundException::new);
     }
 
-    public Offer getOfferById(long id){
-        return offerRepository.getOne(id);
+    public Optional<Offer> findById(long id) {
+        return offerRepository.findById(id);
     }
 
     public List<OfferDTO> getAll() {

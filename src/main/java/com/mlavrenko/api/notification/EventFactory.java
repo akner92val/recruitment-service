@@ -21,6 +21,6 @@ public class EventFactory {
     }
 
     public StatusChangedEvent createStatusChangedEvent(ApplicationStatus newStatus, Long applicationId) {
-        return events.get(newStatus).apply(applicationId);
+        return events.getOrDefault(newStatus, AppliedStatusEvent::new).apply(applicationId);
     }
 }

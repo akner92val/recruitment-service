@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "recruitment-service/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/recruitment-service", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ApplicationController {
     private final ApplicationService applicationService;
 
@@ -34,20 +34,17 @@ public class ApplicationController {
     }
 
     @GetMapping("/application/{id}")
-    public ResponseEntity<ApplicationDTO> getById(@Valid @RequestBody Long id) {
-        ApplicationDTO applicationDTO = applicationService.getById(id);
-        return ResponseEntity.ok().body(applicationDTO);
+    public ApplicationDTO getById(@Valid @PathVariable long id) {
+        return applicationService.getById(id);
     }
 
     @GetMapping("/applications/{offerId}}")
-    public ResponseEntity<List<ApplicationDTO>> getAllByOfferId(@PathVariable Long offerId) {
-        List<ApplicationDTO> applications = applicationService.getAllByOfferId(offerId);
-        return ResponseEntity.ok().body(applications);
+    public List<ApplicationDTO> getAllByOfferId(@Valid @PathVariable long offerId) {
+        return applicationService.getAllByOfferId(offerId);
     }
 
     @GetMapping("/applications/count}")
-    public ResponseEntity<Long> getApplicationsCount() {
-        long count = applicationService.getApplicationsCount();
-        return ResponseEntity.ok().body(count);
+    public Long getApplicationsCount() {
+        return applicationService.getApplicationsCount();
     }
 }
