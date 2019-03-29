@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/recruitment-service", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/recruitment-service/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OfferController {
     private final OfferService offerService;
 
@@ -24,18 +24,18 @@ public class OfferController {
         this.offerService = offerService;
     }
 
-    @PostMapping(value = "/offer", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "offer", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public OfferDTO create(@Valid @RequestBody OfferDTO offerDTO) {
         return offerService.createOffer(offerDTO);
     }
 
-    @GetMapping("/offer/{id}")
+    @GetMapping("offer/{id}")
     public OfferDTO getById(@Valid @PathVariable("id") long id) {
         return offerService.getById(id);
     }
 
-    @GetMapping("/offers")
+    @GetMapping("offers")
     public List<OfferDTO> getAll() {
         return offerService.getAll();
     }

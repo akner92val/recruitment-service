@@ -47,3 +47,34 @@ And we can't stress enough: we are looking for clean, structured code. If the ta
 But make sure everything you hand in is well laid out and tidy!
 
 Please send a link to a repository with your solution or a file archive to tech@heavenHR.com
+
+# How to use
+
+## Build & Run
+```
+mvn spring-boot:run
+```
+
+## How to use
+
+Requests examples:
+
+**Offer**:
+
+**create offer** - POST http://localhost:8080/recruitment-service/offer
+
+**get offer by id** - GET http://localhost:8080/recruitment-service/offer/{id}
+
+**get all offers** - GET http://localhost:8080/recruitment-service/offers
+
+**Application**:
+
+**create application** - POST http://localhost:8080/recruitment-service/application
+
+**update application** - PUT http://localhost:8080/recruitment-service/application/{id}
+
+**get application by id** - GET http://localhost:8080/recruitment-service/application/{id}
+
+**get application by offer id** - GET http://localhost:8080/recruitment-service/applications/{offerId}
+
+**get all applications count** - GET http://localhost:8080/recruitment-service/application/count
