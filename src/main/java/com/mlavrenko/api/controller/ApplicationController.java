@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/recruitment-service", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/recruitment-service/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ApplicationController {
     private final ApplicationService applicationService;
 
@@ -19,31 +19,31 @@ public class ApplicationController {
         this.applicationService = applicationService;
     }
 
-    @PostMapping(value = "/application", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "application", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApplicationDTO> create(@Valid @RequestBody ApplicationDTO applicationDTO) {
         ApplicationDTO application = applicationService.createApplication(applicationDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(application);
     }
 
-    @PutMapping(value = "/application", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "application", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApplicationDTO> update(@Valid @RequestBody ApplicationDTO applicationDTO) {
-        ApplicationDTO application = applicationService.createApplication(applicationDTO);
+        ApplicationDTO application = applicationService.updateApplication(applicationDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(application);
     }
 
-    @GetMapping("/application/{id}")
-    public ApplicationDTO getById(@Valid @PathVariable long id) {
+    @GetMapping("application/{id}")
+    public ApplicationDTO getById(@Valid @PathVariable("id") long id) {
         return applicationService.getById(id);
     }
 
-    @GetMapping("/applications/{offerId}}")
-    public List<ApplicationDTO> getAllByOfferId(@Valid @PathVariable long offerId) {
+    @GetMapping("applications/{offerId}")
+    public List<ApplicationDTO> getAllByOfferId(@Valid @PathVariable("offerId") long offerId) {
         return applicationService.getAllByOfferId(offerId);
     }
 
-    @GetMapping("/applications/count}")
+    @GetMapping("application/count")
     public Long getApplicationsCount() {
         return applicationService.getApplicationsCount();
     }

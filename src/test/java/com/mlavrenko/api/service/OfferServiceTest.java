@@ -35,6 +35,7 @@ class OfferServiceTest {
     }
 
     @Test
+    @DisplayName("createOffer should return new entity")
     void createOffer() {
         OfferDTO offerDTO = new OfferDTO();
         Offer expected = new Offer();
@@ -43,8 +44,10 @@ class OfferServiceTest {
 
         OfferDTO actual = offerService.createOffer(offerDTO);
 
-        Mockito.verify(offerRepository).save(any(Offer.class));
-        assertThat(actual).isEqualTo(offerDTO);
+        assertAll(
+                () -> Mockito.verify(offerRepository).save(any(Offer.class)),
+                () -> assertThat(actual).isEqualToComparingFieldByField(offerDTO)
+        );
     }
 
     @Test
@@ -64,7 +67,7 @@ class OfferServiceTest {
     void findById() {
         long id = 1L;
         Offer expected = new Offer();
-        Mockito.when(offerRepository.getOne(id)).thenReturn(expected);
+        Mockito.when(offerRepository.findById(id)).thenReturn(Optional.of(expected));
         Optional<Offer> offer = offerService.findById(id);
 
         assertAll(
@@ -92,7 +95,7 @@ class OfferServiceTest {
     @Test
     @DisplayName("getById throws not found exception when entity doesn't exist")
     void getByIdNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> offerService.findById(anyLong()));
+        assertThrows(EntityNotFoundException.class, () -> offerService.getById(anyLong()));
     }
 
 

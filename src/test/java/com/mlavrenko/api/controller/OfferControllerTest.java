@@ -5,6 +5,8 @@ import com.mlavrenko.api.domain.Offer;
 import com.mlavrenko.api.dto.OfferDTO;
 import com.mlavrenko.api.repository.OfferRepository;
 import org.assertj.core.util.DateUtil;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,11 @@ class OfferControllerTest {
     @Autowired
     private OfferRepository offerRepository;
 
+    @AfterEach
+    void after() {
+        offerRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("create should create new entity and return status 201")
     void create() throws Exception {
@@ -41,9 +48,10 @@ class OfferControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .content(value)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.id", comparesEqualTo(1)))
+                .andExpect(jsonPath("$.id", notNullValue()))
                 .andExpect(jsonPath("$.jobTitle", equalTo(offer.getJobTitle())))
                 .andExpect(jsonPath("$.numberOfApplications", equalTo(0)));
     }
@@ -78,10 +86,9 @@ class OfferControllerTest {
     @Test
     @DisplayName("getAll should return expected list of offers and status ok")
     void getAllEmpty() throws Exception {
-        offerRepository.deleteAll();
-
         mvc.perform(get("/recruitment-service/offers")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$", empty()));
